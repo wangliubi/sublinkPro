@@ -25,6 +25,7 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 
 import DownloadIcon from '@mui/icons-material/Download';
 import SearchIcon from '@mui/icons-material/Search';
@@ -53,6 +54,7 @@ TabPanel.propTypes = {
 
 export default function TrafficStatsDialog({ open, onClose, task }) {
   const theme = useTheme();
+  const { isDark } = useResolvedColorScheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [tabValue, setTabValue] = useState(0);
 
@@ -401,10 +403,7 @@ export default function TrafficStatsDialog({ open, onClose, task }) {
       <DialogContent dividers>
         <Grid container spacing={2} sx={{ mb: 3 }}>
           <Grid item xs={12}>
-            <Paper
-              variant="outlined"
-              sx={{ p: 2, textAlign: 'center', bgcolor: theme.palette.mode === 'dark' ? 'background.default' : 'primary.lighter' }}
-            >
+            <Paper variant="outlined" sx={{ p: 2, textAlign: 'center', bgcolor: isDark ? 'background.default' : 'primary.lighter' }}>
               <Typography variant="subtitle2" color="textSecondary" gutterBottom>
                 总消耗流量
               </Typography>

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useState, useEffect, useCallback } from 'react';
 
 // material-ui
-import { useColorScheme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -38,6 +38,7 @@ import {
   deleteNodeCheckProfile,
   runNodeCheckWithProfile
 } from 'api/nodeCheck';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 
 // local components
 import NodeCheckProfileFormDialog from './NodeCheckProfileFormDialog';
@@ -97,9 +98,7 @@ const getStrategyTitleChipSx = (theme, isDark, tone = 'neutral') => {
  */
 export default function NodeCheckProfilesDrawer({ open, onClose, groupOptions, tagOptions, onMessage }) {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const runtimeColorScheme = typeof document !== 'undefined' ? document.documentElement?.getAttribute('data-color-scheme') : null;
-  const isDark = (mode || runtimeColorScheme || theme.palette.mode) === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const palette = theme.vars?.palette || theme.palette;
   const drawerSurface = isDark ? withAlpha(palette.background.default, 0.97) : palette.background.paper;

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useState, useEffect, useCallback } from 'react';
 
 // material-ui
-import { useColorScheme, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -29,6 +29,7 @@ import TimerIcon from '@mui/icons-material/Timer';
 
 // api
 import { getNodeCheckProfiles, runNodeCheck } from 'api/nodeCheck';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { withAlpha } from 'utils/colorUtils';
 
 /**
@@ -85,9 +86,7 @@ const getStrategyTitleChipSx = (theme, isDark, tone = 'neutral') => {
 
 export default function ProfileSelectDialog({ open, onClose, nodeIds, onSuccess, onOpenSettings }) {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const runtimeColorScheme = typeof document !== 'undefined' ? document.documentElement?.getAttribute('data-color-scheme') : null;
-  const isDark = (mode || runtimeColorScheme || theme.palette.mode) === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const dialogSurface = isDark ? withAlpha(palette.background.default, 0.96) : palette.background.paper;
   const dialogSurfaceGradient = isDark

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useMemo } from 'react';
 import * as echarts from 'echarts';
 // import 'echarts-gl'; // 3D Not needed for flat map
-import { alpha, useColorScheme, useTheme } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import { Box, Card, Typography, CircularProgress } from '@mui/material';
 import worldJson from 'assets/world.json';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { withAlpha } from 'utils/colorUtils';
 import { COUNTRY_COORDINATES, COUNTRY_NAME_MAP } from './countryData';
 
@@ -43,9 +44,8 @@ const findCountryCode = (name) => {
 const NodeMap = ({ data = {}, loading = false }) => {
   const chartRef = useRef(null);
   const theme = useTheme();
-  const { mode } = useColorScheme();
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
-  const isDark = mode === 'dark';
   const chartInstance = useRef(null);
   const accentColor = theme.palette.info.main;
   const accentSoft = theme.palette.info.light;

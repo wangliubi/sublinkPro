@@ -25,6 +25,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
 import { useAuth } from 'contexts/AuthContext';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
+import { withAlpha } from 'utils/colorUtils';
 
 // assets
 import { IconBell, IconCheck, IconTrash, IconCircleCheck, IconCircleX, IconInfoCircle } from '@tabler/icons-react';
@@ -49,9 +51,14 @@ export default function NotificationSection() {
   const theme = useTheme();
   const downMD = useMediaQuery(theme.breakpoints.down('md'));
   const { notifications, clearAllNotifications } = useAuth();
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
+  const palette = theme.vars?.palette || theme.palette;
   const bellAccent = isDark ? theme.palette.warning.main : theme.palette.warning.dark;
   const bellSurface = isDark ? alpha(theme.palette.warning.main, 0.14) : alpha(theme.palette.warning.main, 0.14);
+  const iconSurface = isDark ? withAlpha(palette.background.default, 0.88) : bellSurface;
+  const popoverSurface = palette.background.paper;
+  const popoverSurfaceAccent = isDark ? `linear-gradient(180deg, ${alpha(theme.palette.common.white, 0.02)} 0%, transparent 100%)` : 'none';
+  const popoverBorder = withAlpha(palette.divider, isDark ? 0.84 : 0.72);
 
   const [open, setOpen] = useState(false);
   // 从 localStorage 初始化已读状态
@@ -150,7 +157,7 @@ export default function NotificationSection() {
                 ...theme.typography.mediumAvatar,
                 transition: 'all .2s ease-in-out',
                 color: bellAccent,
-                background: isDark ? alpha(theme.palette.background.default, 0.88) : bellSurface,
+                background: iconSurface,
                 border: '1px solid',
                 borderColor: alpha(bellAccent, isDark ? 0.28 : 0.2),
                 position: 'relative',
@@ -193,9 +200,11 @@ export default function NotificationSection() {
                     sx={{
                       minWidth: 330,
                       maxWidth: 400,
-                      bgcolor: isDark ? alpha(theme.palette.background.default, 0.96) : 'background.paper',
+                      bgcolor: popoverSurface,
+                      backgroundImage: popoverSurfaceAccent,
                       border: '1px solid',
-                      borderColor: alpha(theme.palette.divider, isDark ? 0.9 : 0.72)
+                      borderColor: popoverBorder,
+                      boxShadow: isDark ? `inset 0 1px 0 ${alpha(theme.palette.common.white, 0.04)}` : undefined
                     }}
                   >
                     <Stack sx={{ gap: 2 }}>

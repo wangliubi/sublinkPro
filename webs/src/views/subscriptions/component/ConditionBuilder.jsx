@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 // Paper 组件已改为 Box
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { withAlpha } from '../../../utils/colorUtils';
 import {
   getNodeConditionFieldMeta,
@@ -30,7 +31,7 @@ import {
 export default function ConditionBuilder({ value, onChange, fields = [], operators = [], title = '条件配置' }) {
   const theme = useTheme();
   const palette = theme.vars?.palette || theme.palette;
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const panelBorder = isDark ? withAlpha(palette.divider, 0.78) : withAlpha(palette.divider, 0.9);
   const containerSurface = isDark ? withAlpha(palette.background.paper, 0.42) : palette.background.paper;
   const fieldSurface = isDark ? withAlpha(palette.background.default, 0.72) : palette.background.default;

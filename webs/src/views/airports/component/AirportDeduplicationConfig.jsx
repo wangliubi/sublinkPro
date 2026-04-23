@@ -25,6 +25,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { alpha, useTheme } from '@mui/material/styles';
 import { getProtocolMeta } from 'api/subscriptions';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 
 /**
  * 机场去重规则配置组件
@@ -35,6 +36,7 @@ import { getProtocolMeta } from 'api/subscriptions';
  */
 function AirportDeduplicationConfig({ value, onChange }) {
   const theme = useTheme();
+  const { isDark } = useResolvedColorScheme();
   // 元数据状态
   const [protocolMeta, setProtocolMeta] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -156,7 +158,7 @@ function AirportDeduplicationConfig({ value, onChange }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          bgcolor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.default, 0.88) : 'background.default',
+          bgcolor: isDark ? alpha(theme.palette.background.default, 0.88) : 'background.default',
           borderBottom: '1px solid',
           borderColor: 'divider',
           cursor: 'pointer',
@@ -177,17 +179,12 @@ function AirportDeduplicationConfig({ value, onChange }) {
             color={config.mode === 'none' ? 'default' : 'primary'}
             variant="outlined"
             sx={{
-              bgcolor:
-                config.mode === 'none'
-                  ? 'transparent'
-                  : theme.palette.mode === 'dark'
-                    ? 'action.selected'
-                    : alpha(theme.palette.primary.main, 0.08),
+              bgcolor: config.mode === 'none' ? 'transparent' : isDark ? 'action.selected' : alpha(theme.palette.primary.main, 0.08),
               color: config.mode === 'none' ? 'text.secondary' : 'primary.main',
               borderColor:
                 config.mode === 'none'
-                  ? alpha(theme.palette.divider, theme.palette.mode === 'dark' ? 0.9 : 0.72)
-                  : alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.32 : 0.22)
+                  ? alpha(theme.palette.divider, isDark ? 0.9 : 0.72)
+                  : alpha(theme.palette.primary.main, isDark ? 0.32 : 0.22)
             }}
           />
         </Stack>
@@ -232,7 +229,7 @@ function AirportDeduplicationConfig({ value, onChange }) {
                         borderColor: 'divider',
                         '&:before': { display: 'none' },
                         '& .MuiAccordionSummary-root': {
-                          bgcolor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.default, 0.92) : 'background.default',
+                          bgcolor: isDark ? alpha(theme.palette.background.default, 0.92) : 'background.default',
                           borderBottom: '1px solid',
                           borderColor: alpha(theme.palette.divider, 0.72),
                           minHeight: 48,
@@ -244,7 +241,7 @@ function AirportDeduplicationConfig({ value, onChange }) {
                           alignItems: 'center'
                         },
                         '& .MuiAccordionDetails-root': {
-                          bgcolor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.paper, 0.08) : 'background.paper'
+                          bgcolor: isDark ? alpha(theme.palette.background.paper, 0.08) : 'background.paper'
                         }
                       }}
                       defaultExpanded={getProtocolSelectedCount(proto.name) > 0}
@@ -259,11 +256,8 @@ function AirportDeduplicationConfig({ value, onChange }) {
                             variant="outlined"
                             sx={{
                               ml: 1,
-                              bgcolor:
-                                theme.palette.mode === 'dark'
-                                  ? alpha(theme.palette.primary.main, 0.12)
-                                  : alpha(theme.palette.primary.main, 0.08),
-                              borderColor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.32 : 0.2)
+                              bgcolor: isDark ? alpha(theme.palette.primary.main, 0.12) : alpha(theme.palette.primary.main, 0.08),
+                              borderColor: alpha(theme.palette.primary.main, isDark ? 0.32 : 0.2)
                             }}
                           />
                         )}

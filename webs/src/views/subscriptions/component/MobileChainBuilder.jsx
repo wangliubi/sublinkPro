@@ -18,6 +18,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -49,7 +50,7 @@ export default function MobileChainBuilder({
 }) {
   const theme = useTheme();
   const palette = theme.vars?.palette || theme.palette;
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const dialogSurface = isDark ? withAlpha(palette.background.default, 0.96) : palette.background.paper;
   const dialogSurfaceGradient = isDark
     ? `linear-gradient(180deg, ${withAlpha(palette.background.paper, 0.16)} 0%, ${dialogSurface} 100%)`
@@ -219,7 +220,7 @@ export default function MobileChainBuilder({
                 borderRadius: 2,
                 borderColor: alpha(theme.palette.primary.main, isDark ? 0.3 : 0.24),
                 bgcolor: nestedPanelSurface,
-                boxShadow: theme.palette.mode === 'dark' ? 'none' : theme.shadows[1]
+                boxShadow: isDark ? 'none' : theme.shadows[1]
               }}
             >
               <CardContent sx={{ py: 1.5, px: 2, '&:last-child': { pb: 1.5 } }}>
@@ -284,7 +285,7 @@ export default function MobileChainBuilder({
             cursor: 'pointer',
             borderColor: alpha(theme.palette.success.main, 0.26),
             bgcolor: nestedPanelSurface,
-            boxShadow: theme.palette.mode === 'dark' ? 'none' : theme.shadows[1],
+            boxShadow: isDark ? 'none' : theme.shadows[1],
             transition: 'transform 0.2s',
             '&:active': { transform: 'scale(0.98)' }
           }}

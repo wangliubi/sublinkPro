@@ -40,6 +40,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 // project imports
 import CronExpressionGenerator from 'components/CronExpressionGenerator';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { withAlpha } from 'utils/colorUtils';
 
 // api
@@ -65,7 +66,7 @@ import {
 function ConfigSection({ title, icon, children, defaultExpanded = true, helperText }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const panelBorder = isDark ? withAlpha(palette.divider, 0.82) : withAlpha(palette.divider, 0.9);
   const sectionSurface = isDark ? withAlpha(palette.background.paper, 0.36) : palette.background.paper;
@@ -138,7 +139,7 @@ export default function NodeCheckProfileFormDialog({ open, onClose, profile, gro
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isEdit = !!profile;
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const dialogSurface = isDark ? withAlpha(palette.background.default, 0.96) : palette.background.paper;
   const dialogSurfaceGradient = isDark

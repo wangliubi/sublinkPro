@@ -27,6 +27,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import { getTagGroups } from 'api/tags';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { getFraudScoreIcon } from 'utils/fraudScore';
 import { getDelayIcon, getSpeedIcon } from 'utils/nodeMetricIcons';
 import { getUnlockRenameVariables } from 'views/nodes/utils';
@@ -154,6 +155,7 @@ const buildRule = (items) => {
 export default function NodeRenameBuilder({ value, onChange }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { isDark } = useResolvedColorScheme();
   const getSectionAccent = (section) => {
     switch (section) {
       case 'quality':
@@ -166,16 +168,16 @@ export default function NodeRenameBuilder({ value, onChange }) {
     }
   };
   const buildSectionChipSx = (accent) => ({
-    bgcolor: alpha(accent, theme.palette.mode === 'dark' ? 0.18 : 0.1),
+    bgcolor: alpha(accent, isDark ? 0.18 : 0.1),
     color: accent,
     fontWeight: 600,
     border: '1px solid',
-    borderColor: alpha(accent, theme.palette.mode === 'dark' ? 0.34 : 0.18),
+    borderColor: alpha(accent, isDark ? 0.34 : 0.18),
     cursor: 'pointer',
     transition: 'background-color 0.2s ease, border-color 0.2s ease',
     '&:hover': {
-      bgcolor: alpha(accent, theme.palette.mode === 'dark' ? 0.24 : 0.14),
-      borderColor: alpha(accent, theme.palette.mode === 'dark' ? 0.46 : 0.28)
+      bgcolor: alpha(accent, isDark ? 0.24 : 0.14),
+      borderColor: alpha(accent, isDark ? 0.46 : 0.28)
     }
   });
 
@@ -515,7 +517,7 @@ export default function NodeRenameBuilder({ value, onChange }) {
                               bgcolor:
                                 item.type === 'variable'
                                   ? `${getVariableColor(item.value)}20`
-                                  : alpha(theme.palette.text.primary, theme.palette.mode === 'dark' ? 0.12 : 0.08),
+                                  : alpha(theme.palette.text.primary, isDark ? 0.12 : 0.08),
                               color: item.type === 'variable' ? getVariableColor(item.value) : 'text.primary',
                               fontWeight: 600,
                               border: '1px solid',

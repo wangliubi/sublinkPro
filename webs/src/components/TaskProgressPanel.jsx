@@ -20,6 +20,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import StopIcon from '@mui/icons-material/Stop';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useTaskProgress } from 'contexts/TaskProgressContext';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 
 import { getUnlockTaskResultText } from 'views/nodes/utils';
 import { withAlpha } from 'utils/colorUtils';
@@ -54,9 +55,8 @@ const getReadableTertiaryTextColor = (theme, isDark) => {
   return isDark ? withAlpha(darkText, 0.68) : withAlpha(palette.text.primary, 0.68);
 };
 
-const getOuterPanelSurface = (theme, accentColor) => {
+const getOuterPanelSurface = (theme, accentColor, isDark) => {
   const palette = theme.vars?.palette || theme.palette;
-  const isDark = theme.palette.mode === 'dark';
   const darkSurfaceBase = withAlpha(palette.background.default, 0.985);
   const darkSurfaceElevated = withAlpha(palette.background.paper, 0.96);
 
@@ -77,9 +77,8 @@ const getOuterPanelSurface = (theme, accentColor) => {
   };
 };
 
-const getTaskCardSurface = (theme, accentColor) => {
+const getTaskCardSurface = (theme, accentColor, isDark) => {
   const palette = theme.vars?.palette || theme.palette;
-  const isDark = theme.palette.mode === 'dark';
   const darkPanelBase = withAlpha(palette.background.default, 0.82);
   const darkPanelElevated = withAlpha(palette.background.paper, 0.38);
 
@@ -110,16 +109,15 @@ const getAccentIconBox = (accentColor, isDark) => ({
   flexShrink: 0
 });
 
-const getAccentChipSx = (theme, accentColor) => ({
-  bgcolor: alpha(accentColor, theme.palette.mode === 'dark' ? 0.18 : 0.08),
-  color:
-    theme.palette.mode === 'dark'
-      ? withAlpha((theme.vars?.palette || theme.palette).text?.dark || theme.palette.common.white, 0.92)
-      : alpha(accentColor, 0.92),
-  border: `1px solid ${alpha(accentColor, theme.palette.mode === 'dark' ? 0.3 : 0.2)}`,
+const getAccentChipSx = (theme, accentColor, isDark) => ({
+  bgcolor: alpha(accentColor, isDark ? 0.18 : 0.08),
+  color: isDark
+    ? withAlpha((theme.vars?.palette || theme.palette).text?.dark || theme.palette.common.white, 0.92)
+    : alpha(accentColor, 0.92),
+  border: `1px solid ${alpha(accentColor, isDark ? 0.3 : 0.2)}`,
   fontWeight: 600,
   '&:hover': {
-    bgcolor: alpha(accentColor, theme.palette.mode === 'dark' ? 0.24 : 0.14)
+    bgcolor: alpha(accentColor, isDark ? 0.24 : 0.14)
   }
 });
 
@@ -127,7 +125,7 @@ const getAccentChipSx = (theme, accentColor) => ({
 
 const TaskProgressItem = ({ task, currentTime, onStopTask, isStopping }) => {
   const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const primaryTextColor = getReadablePrimaryTextColor(theme, isDark);
   const secondaryTextColor = getReadableSecondaryTextColor(theme, isDark);
@@ -276,7 +274,7 @@ const TaskProgressItem = ({ task, currentTime, onStopTask, isStopping }) => {
     >
       <Card
         sx={{
-          ...getTaskCardSurface(theme, taskConfig.accentColor),
+          ...getTaskCardSurface(theme, taskConfig.accentColor, isDark),
           borderRadius: 3,
           overflow: 'hidden'
         }}
@@ -364,7 +362,7 @@ const TaskProgressItem = ({ task, currentTime, onStopTask, isStopping }) => {
                         height: 18,
                         fontSize: '0.65rem',
                         fontWeight: 500,
-                        ...getAccentChipSx(theme, taskConfig.accentColor),
+                        ...getAccentChipSx(theme, taskConfig.accentColor, isDark),
                         maxWidth: { xs: 80, sm: 100 },
                         '& .MuiChip-label': {
                           overflow: 'hidden',
@@ -383,7 +381,7 @@ const TaskProgressItem = ({ task, currentTime, onStopTask, isStopping }) => {
                         fontSize: '0.65rem',
                         fontWeight: 500,
                         flexShrink: 0,
-                        ...getAccentChipSx(theme, task.result.phase === 'latency' ? '#06b6d4' : '#f59e0b'),
+                        ...getAccentChipSx(theme, task.result.phase === 'latency' ? '#06b6d4' : '#f59e0b', isDark),
                         '& .MuiChip-label': { px: 0.75 }
                       }}
                     />
@@ -535,7 +533,7 @@ const TaskProgressItem = ({ task, currentTime, onStopTask, isStopping }) => {
 
 const TaskProgressPanel = () => {
   const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const primaryTextColor = getReadablePrimaryTextColor(theme, isDark);
   const { taskList, hasActiveTasks, stopTask, isTaskStopping } = useTaskProgress();
   const [currentTime, setCurrentTime] = useState(Date.now());
@@ -551,7 +549,7 @@ const TaskProgressPanel = () => {
     <Collapse in={hasActiveTasks} unmountOnExit timeout={300}>
       <Card
         sx={{
-          ...getOuterPanelSurface(theme, '#6366f1'),
+          ...getOuterPanelSurface(theme, '#6366f1', isDark),
           mb: 4,
           borderRadius: 4,
           overflow: 'hidden',
@@ -588,7 +586,7 @@ const TaskProgressPanel = () => {
                 height: 22,
                 fontSize: '0.7rem',
                 fontWeight: 500,
-                ...getAccentChipSx(theme, '#6366f1')
+                ...getAccentChipSx(theme, '#6366f1', isDark)
               }}
             />
           </Box>

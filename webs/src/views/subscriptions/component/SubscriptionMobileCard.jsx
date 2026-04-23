@@ -98,11 +98,11 @@ export default function SubscriptionMobileCard({
                 onClick={() => onToggleRow(sub.ID)}
                 sx={{ cursor: 'pointer' }}
               >
-                <Stack direction="row" spacing={1} alignItems="center" sx={{ flex: 1 }}>
-                  <Chip label={sub.Name} sx={{ ...getSubscriptionNameChipSx(theme), maxWidth: '70%' }} />
-                  {sortingSubId === sub.ID && <Chip label="排序中" color="warning" size="small" />}
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ flex: 1, minWidth: 0 }}>
+                  <Chip label={sub.Name} sx={[...getSubscriptionNameChipSx(theme), { minWidth: 0, flexShrink: 1 }]} />
+                  {sortingSubId === sub.ID && <Chip label="排序中" color="warning" size="small" sx={{ flexShrink: 0 }} />}
                 </Stack>
-                <IconButton size="small">
+                <IconButton size="small" sx={{ flexShrink: 0 }}>
                   {expandedRows[sub.ID] || sortingSubId === sub.ID ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </IconButton>
               </Stack>

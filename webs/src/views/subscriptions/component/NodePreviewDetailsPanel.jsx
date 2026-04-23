@@ -17,6 +17,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { getProtocolPresentation } from '../../../utils/protocolPresentation';
 
 // icons
@@ -45,6 +46,7 @@ const formatDateTime = (dateStr) => {
 export default function NodePreviewDetailsPanel({ open, node, tagColorMap, onClose, onViewIP }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { isDark } = useResolvedColorScheme();
 
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
@@ -67,8 +69,8 @@ export default function NodePreviewDetailsPanel({ open, node, tagColorMap, onClo
   // 标签列表
   const tags = node.Tags ? node.Tags.split(',').filter((t) => t.trim()) : [];
   const previewLink = node.PreviewLink || node.Link || '';
-  const subtleMonoColor = alpha(theme.palette.text.primary, theme.palette.mode === 'dark' ? 0.86 : 0.66);
-  const secondaryLinkColor = alpha(theme.palette.text.primary, theme.palette.mode === 'dark' ? 0.76 : 0.58);
+  const subtleMonoColor = alpha(theme.palette.text.primary, isDark ? 0.86 : 0.66);
+  const secondaryLinkColor = alpha(theme.palette.text.primary, isDark ? 0.76 : 0.58);
 
   return (
     <>
@@ -312,9 +314,9 @@ export default function NodePreviewDetailsPanel({ open, node, tagColorMap, onClo
             sx={{
               p: 1.25,
               borderRadius: 1.5,
-              bgcolor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.default, 0.84) : 'background.default',
+              bgcolor: isDark ? alpha(theme.palette.background.default, 0.84) : 'background.default',
               border: '1px solid',
-              borderColor: alpha(theme.palette.divider, theme.palette.mode === 'dark' ? 0.82 : 0.72)
+              borderColor: alpha(theme.palette.divider, isDark ? 0.82 : 0.72)
             }}
           >
             <Stack direction="row" alignItems="center" spacing={1}>
@@ -346,8 +348,8 @@ export default function NodePreviewDetailsPanel({ open, node, tagColorMap, onClo
                   px: 1,
                   minWidth: 0,
                   flexShrink: 0,
-                  borderColor: alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.3 : 0.18),
-                  color: theme.palette.mode === 'dark' ? alpha(theme.palette.text.primary, 0.9) : 'primary.main'
+                  borderColor: alpha(theme.palette.primary.main, isDark ? 0.3 : 0.18),
+                  color: isDark ? alpha(theme.palette.text.primary, 0.9) : 'primary.main'
                 }}
               >
                 复制
@@ -375,7 +377,7 @@ export default function NodePreviewDetailsPanel({ open, node, tagColorMap, onClo
                     fontSize: 9,
                     py: 0,
                     minWidth: 0,
-                    color: theme.palette.mode === 'dark' ? alpha(theme.palette.text.primary, 0.82) : 'text.secondary'
+                    color: isDark ? alpha(theme.palette.text.primary, 0.82) : 'text.secondary'
                   }}
                 >
                   复制

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 // material-ui
-import { useColorScheme, useTheme, alpha } from '@mui/material/styles';
+import { useTheme, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -55,6 +55,7 @@ import {
 import { getAirports } from 'api/airports';
 import { formatBytes, formatExpireTime, getUsageColor } from 'views/airports/utils';
 import { getQualityStatusMeta } from 'utils/fraudScore';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { withAlpha } from 'utils/colorUtils';
 
 const getCalmSurface = (theme, accentColor, isDark) => {
@@ -362,8 +363,7 @@ const StatRowsSkeleton = ({ rows = 5 }) => (
 
 const StatsChartCard = ({ title, icon: Icon, accentColor, summary, loading, tooltip, children }) => {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const isDark = mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
 
   return (
     <Card
@@ -409,8 +409,8 @@ const StatsChartCard = ({ title, icon: Icon, accentColor, summary, loading, tool
                 fontSize: '0.75rem',
                 fontWeight: 700,
                 color: accentColor,
-                bgcolor: alpha(accentColor, theme.palette.mode === 'dark' ? 0.2 : 0.1),
-                border: `1px solid ${alpha(accentColor, theme.palette.mode === 'dark' ? 0.32 : 0.18)}`
+                bgcolor: alpha(accentColor, isDark ? 0.2 : 0.1),
+                border: `1px solid ${alpha(accentColor, isDark ? 0.32 : 0.18)}`
               }}
             >
               {summary}
@@ -435,8 +435,7 @@ const RankedStatList = ({
   secondaryMetricsFormatter
 }) => {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const isDark = mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const [expandedKeys, setExpandedKeys] = useState({});
 
   const formatSecondaryMetricValue = (value) => {
@@ -480,7 +479,7 @@ const RankedStatList = ({
                 component="span"
                 variant="caption"
                 sx={{
-                  color: alpha(itemColor, theme.palette.mode === 'dark' ? 0.7 : 0.5),
+                  color: alpha(itemColor, isDark ? 0.7 : 0.5),
                   fontWeight: 700,
                   lineHeight: 1
                 }}
@@ -545,7 +544,7 @@ const RankedStatList = ({
                       borderRadius: '50%',
                       bgcolor: item.color,
                       flexShrink: 0,
-                      boxShadow: `0 0 0 4px ${alpha(item.color, theme.palette.mode === 'dark' ? 0.18 : 0.12)}`
+                      boxShadow: `0 0 0 4px ${alpha(item.color, isDark ? 0.18 : 0.12)}`
                     }}
                   />
                 )}
@@ -609,7 +608,7 @@ const RankedStatList = ({
                   mt: 1.25,
                   ml: { xs: 1.5, sm: 2 },
                   pl: 1.5,
-                  borderLeft: `2px dashed ${alpha(item.color, theme.palette.mode === 'dark' ? 0.4 : 0.3)}`,
+                  borderLeft: `2px dashed ${alpha(item.color, isDark ? 0.4 : 0.3)}`,
                   display: 'flex',
                   flexDirection: 'column',
                   gap: 1.25
@@ -686,8 +685,7 @@ const RankedStatList = ({
 
 const QualityMetricRow = ({ label, count, percent, color, tooltip }) => {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const isDark = mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const row = (
     <Box>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5, mb: 0.75 }}>
@@ -730,8 +728,7 @@ const QualityMetricRow = ({ label, count, percent, color, tooltip }) => {
 
 const IPQualityBreakdown = ({ stats, loading }) => {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const isDark = mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
 
   if (loading) {
     return <StatRowsSkeleton rows={5} />;
@@ -777,7 +774,7 @@ const IPQualityBreakdown = ({ stats, loading }) => {
       <Box
         sx={{
           pt: 2,
-          borderTop: `1px solid ${alpha(theme.palette.text.primary, theme.palette.mode === 'dark' ? 0.08 : 0.06)}`
+          borderTop: `1px solid ${alpha(theme.palette.text.primary, isDark ? 0.08 : 0.06)}`
         }}
       >
         <Typography variant="body2" sx={{ color: getReadableSecondaryTextColor(theme, isDark), mb: 1.25, fontWeight: 600 }}>
@@ -800,8 +797,8 @@ const IPQualityBreakdown = ({ stats, loading }) => {
         sx={{
           p: 1.5,
           borderRadius: 3,
-          bgcolor: alpha('#94a3b8', theme.palette.mode === 'dark' ? 0.12 : 0.08),
-          border: `1px solid ${alpha('#94a3b8', theme.palette.mode === 'dark' ? 0.24 : 0.16)}`
+          bgcolor: alpha('#94a3b8', isDark ? 0.12 : 0.08),
+          border: `1px solid ${alpha('#94a3b8', isDark ? 0.24 : 0.16)}`
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5 }}>
@@ -862,8 +859,7 @@ const PremiumStatCard = ({
   nodePassStats
 }) => {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const isDark = mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const surfaceSx = getCalmSurface(theme, accentColor || gradientColors[0], isDark);
   const hasNodePassStats = Boolean(nodePassStats);
 
@@ -1107,8 +1103,7 @@ import { donationConfig } from 'config/donation';
 
 const StarReminderCard = () => {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const isDark = mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const [starCount, setStarCount] = useState(null);
   const supportAccent = theme.palette.warning.main;
   const supportAccentReadable = getReadableWarningAccentColor(theme, isDark);
@@ -1315,8 +1310,7 @@ const StarReminderCard = () => {
 
 const AirportUsageCard = ({ airports = [], loading }) => {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const isDark = mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const usageAccent = theme.palette.info.main;
   const getProgressTrackColor = (percent) => alpha(getUsageColor(percent), isDark ? 0.22 : 0.12);
   const usageSurface = getInsetPanelSurface(theme, usageAccent, isDark);
@@ -1585,8 +1579,7 @@ const AirportUsageCard = ({ airports = [], loading }) => {
 
 const WelcomeBanner = ({ greeting }) => {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const isDark = mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const bannerAccent = theme.palette.secondary.main;
 
   return (
@@ -1670,8 +1663,7 @@ const WelcomeBanner = ({ greeting }) => {
 
 const ReleaseCard = ({ release }) => {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const isDark = mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
 
   return (
     <Card
@@ -1800,8 +1792,7 @@ const ReleaseCard = ({ release }) => {
 
 export default function DashboardDefault() {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const isDark = mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [nodeTotal, setNodeTotal] = useState(0);
   const [nodeDelayPassCount, setNodeDelayPassCount] = useState(0);
@@ -2094,8 +2085,8 @@ export default function DashboardDefault() {
                   sx={{
                     p: 1.5,
                     borderRadius: 3,
-                    bgcolor: alpha('#94a3b8', theme.palette.mode === 'dark' ? 0.12 : 0.08),
-                    border: `1px solid ${alpha('#94a3b8', theme.palette.mode === 'dark' ? 0.24 : 0.16)}`
+                    bgcolor: alpha('#94a3b8', isDark ? 0.12 : 0.08),
+                    border: `1px solid ${alpha('#94a3b8', isDark ? 0.24 : 0.16)}`
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5 }}>
@@ -2240,8 +2231,8 @@ export default function DashboardDefault() {
                   sx={{
                     p: 1.5,
                     borderRadius: 3,
-                    bgcolor: alpha('#94a3b8', theme.palette.mode === 'dark' ? 0.12 : 0.08),
-                    border: `1px solid ${alpha('#94a3b8', theme.palette.mode === 'dark' ? 0.24 : 0.16)}`
+                    bgcolor: alpha('#94a3b8', isDark ? 0.12 : 0.08),
+                    border: `1px solid ${alpha('#94a3b8', isDark ? 0.24 : 0.16)}`
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 1.5 }}>
@@ -2276,8 +2267,8 @@ export default function DashboardDefault() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: alpha(theme.palette.secondary.main, theme.palette.mode === 'dark' ? 0.18 : 0.1),
-                border: `1px solid ${alpha(theme.palette.secondary.main, theme.palette.mode === 'dark' ? 0.32 : 0.18)}`
+                backgroundColor: alpha(theme.palette.secondary.main, isDark ? 0.18 : 0.1),
+                border: `1px solid ${alpha(theme.palette.secondary.main, isDark ? 0.32 : 0.18)}`
               }}
             >
               <Typography sx={{ fontSize: '1.2rem' }}>📝</Typography>

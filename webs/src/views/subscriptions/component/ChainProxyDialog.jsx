@@ -16,6 +16,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { alpha, useTheme } from '@mui/material/styles';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
@@ -49,7 +50,7 @@ import ChainRuleEditor from './ChainRuleEditor';
 export default function ChainProxyDialog({ open, onClose, subscription }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const dialogSurface = isDark ? withAlpha(palette.background.default, 0.96) : palette.background.paper;
   const dialogSurfaceGradient = isDark

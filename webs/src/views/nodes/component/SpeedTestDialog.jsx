@@ -41,6 +41,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 // project imports
 import CronExpressionGenerator from 'components/CronExpressionGenerator';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 
 // constants
 import { SPEED_TEST_TCP_OPTIONS, SPEED_TEST_MIHOMO_OPTIONS, LATENCY_TEST_URL_OPTIONS, LANDING_IP_URL_OPTIONS } from '../utils';
@@ -53,8 +54,7 @@ import { useState } from 'react';
  */
 function ConfigSection({ title, icon, children, defaultExpanded = true, helperText }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
-  const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
 
   return (
     <Paper
@@ -127,7 +127,7 @@ export default function SpeedTestDialog({
   onModeChange
 }) {
   const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (

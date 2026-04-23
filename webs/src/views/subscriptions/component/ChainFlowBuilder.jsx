@@ -33,6 +33,7 @@ import DeviceHubIcon from '@mui/icons-material/DeviceHub';
 import CloseIcon from '@mui/icons-material/Close';
 
 import ConditionBuilder from './ConditionBuilder';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { withAlpha } from '../../../utils/colorUtils';
 
 const getProxyTypeColor = (theme, proxyType) => {
@@ -50,9 +51,8 @@ const getProxyTypeColor = (theme, proxyType) => {
   }
 };
 
-const getNodeStyles = (theme) => {
+const getNodeStyles = (theme, isDark) => {
   const palette = theme.vars?.palette || theme.palette;
-  const isDark = theme.palette.mode === 'dark';
   const surface = isDark ? withAlpha(palette.background.paper, 0.42) : palette.background.paper;
   const elevatedSurface = isDark ? withAlpha(palette.background.default, 0.9) : palette.background.paper;
 
@@ -69,7 +69,7 @@ const getNodeStyles = (theme) => {
       justifyContent: 'center',
       fontSize: 14,
       fontWeight: 'bold',
-      boxShadow: theme.palette.mode === 'dark' ? 'none' : theme.shadows[1],
+      boxShadow: isDark ? 'none' : theme.shadows[1],
       border: `1px solid ${alpha(theme.palette.secondary.main, 0.28)}`
     },
     end: {
@@ -83,7 +83,7 @@ const getNodeStyles = (theme) => {
       justifyContent: 'center',
       fontSize: 12,
       fontWeight: 'bold',
-      boxShadow: theme.palette.mode === 'dark' ? 'none' : theme.shadows[1],
+      boxShadow: isDark ? 'none' : theme.shadows[1],
       border: `1px solid ${alpha(theme.palette.success.main, 0.28)}`,
       cursor: 'pointer'
     },
@@ -93,7 +93,7 @@ const getNodeStyles = (theme) => {
       borderRadius: 12,
       padding: '8px 14px',
       minWidth: 120,
-      boxShadow: theme.palette.mode === 'dark' ? 'none' : theme.shadows[1],
+      boxShadow: isDark ? 'none' : theme.shadows[1],
       cursor: 'pointer',
       position: 'relative'
     }
@@ -103,7 +103,8 @@ const getNodeStyles = (theme) => {
 // 开始节点组件
 function StartNode({ data }) {
   const theme = useTheme();
-  const nodeStyles = getNodeStyles(theme);
+  const { isDark } = useResolvedColorScheme();
+  const nodeStyles = getNodeStyles(theme, isDark);
   return (
     <div style={nodeStyles.start}>
       <PlayArrowIcon fontSize="small" sx={{ mr: 0.5 }} />
@@ -120,7 +121,8 @@ function StartNode({ data }) {
 // 结束节点组件（目标节点 - 可配置）
 function EndNode({ data, selected }) {
   const theme = useTheme();
-  const nodeStyles = getNodeStyles(theme);
+  const { isDark } = useResolvedColorScheme();
+  const nodeStyles = getNodeStyles(theme, isDark);
   // 根据目标类型显示不同标签
   const getTargetLabel = () => {
     switch (data.targetType) {
@@ -140,7 +142,7 @@ function EndNode({ data, selected }) {
       style={{
         ...nodeStyles.end,
         boxShadow: selected
-          ? theme.palette.mode === 'dark'
+          ? isDark
             ? `0 0 0 1px ${alpha(theme.palette.success.main, 0.32)}`
             : `0 4px 16px ${alpha(theme.palette.success.main, 0.22)}`
           : nodeStyles.end.boxShadow
@@ -166,7 +168,8 @@ function EndNode({ data, selected }) {
 // 代理组节点组件 - 支持悬停删除
 function ProxyNode({ data, selected }) {
   const theme = useTheme();
-  const nodeStyles = getNodeStyles(theme);
+  const { isDark } = useResolvedColorScheme();
+  const nodeStyles = getNodeStyles(theme, isDark);
   const [hovered, setHovered] = useState(false);
 
   const getIcon = () => {
@@ -210,7 +213,7 @@ function ProxyNode({ data, selected }) {
         ...nodeStyles.proxy,
         borderColor: selected ? theme.palette.info.main : alpha(theme.palette.info.main, 0.42),
         boxShadow: selected
-          ? theme.palette.mode === 'dark'
+          ? isDark
             ? `0 0 0 1px ${alpha(theme.palette.info.main, 0.28)}`
             : `0 6px 18px ${alpha(theme.palette.info.main, 0.16)}`
           : nodeStyles.proxy.boxShadow
@@ -290,7 +293,7 @@ export default function ChainFlowBuilder({
   templateGroups = []
 }) {
   const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const defaultEdgeOptions = useMemo(
     () => ({
@@ -948,13 +951,13 @@ export default function ChainFlowBuilder({
         '--flow-grid': isDark ? withAlpha(palette.divider, 0.12) : withAlpha(palette.divider, 0.4),
         '--flow-overlay': isDark ? withAlpha(palette.background.paper, 0.1) : withAlpha(palette.background.default, 0.16),
         '--flow-surface-strong': isDark ? withAlpha(palette.background.paper, 0.28) : withAlpha(palette.background.paper, 0.98),
-        '--flow-shadow': alpha(theme.palette.text.primary, theme.palette.mode === 'dark' ? 0.24 : 0.12),
+        '--flow-shadow': alpha(theme.palette.text.primary, isDark ? 0.24 : 0.12),
         '--flow-text': palette.text.primary,
         '--flow-muted': palette.text.secondary,
         '--flow-primary': theme.palette.primary.main,
         '--flow-primary-dark': theme.palette.primary.dark,
         '--flow-primary-contrast': theme.palette.primary.contrastText,
-        '--flow-hover': alpha(theme.palette.primary.main, theme.palette.mode === 'dark' ? 0.16 : 0.12),
+        '--flow-hover': alpha(theme.palette.primary.main, isDark ? 0.16 : 0.12),
         '--flow-toolbar-bg': isDark ? withAlpha(palette.background.default, 0.92) : withAlpha(palette.background.paper, 0.94),
         '--flow-handle': theme.palette.primary.main,
         '--flow-handle-border': isDark ? withAlpha(palette.background.paper, 0.42) : palette.background.paper,
@@ -1040,7 +1043,7 @@ export default function ChainFlowBuilder({
               backgroundImage: isDark
                 ? `linear-gradient(180deg, ${withAlpha(palette.background.paper, 0.14)} 0%, ${withAlpha(palette.background.default, 0.96)} 100%)`
                 : 'none',
-              boxShadow: theme.palette.mode === 'dark' ? 'none' : `-4px 0 16px ${alpha(theme.palette.common.black, 0.1)}`
+              boxShadow: isDark ? 'none' : `-4px 0 16px ${alpha(theme.palette.common.black, 0.1)}`
             }}
           >
             {panelType === 'proxy' ? renderProxyConfigPanel() : renderTargetConfigPanel()}

@@ -1,7 +1,7 @@
 import { memo, useState, useEffect, useMemo } from 'react';
 
 // material-ui
-import { useTheme, useColorScheme, alpha } from '@mui/material/styles';
+import { useTheme, alpha } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
@@ -17,6 +17,7 @@ import NewReleasesIcon from '@mui/icons-material/NewReleases';
 
 // project imports
 import useConfig from 'hooks/useConfig';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { withAlpha } from 'utils/colorUtils';
 
 // GitHub 仓库配置
@@ -28,8 +29,7 @@ const GITHUB_API_RELEASES = `https://api.github.com/repos/${GITHUB_REPO}/release
 
 function MenuCard() {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const isDark = mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const { version } = useConfig();
   const [latestVersion, setLatestVersion] = useState('');

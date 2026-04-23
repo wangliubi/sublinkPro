@@ -18,6 +18,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 
 // icons
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -30,6 +31,7 @@ import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
  */
 export default function NodeAddResultDialog({ open, result, onClose }) {
   const theme = useTheme();
+  const { isDark } = useResolvedColorScheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   if (!result) return null;
@@ -65,7 +67,7 @@ export default function NodeAddResultDialog({ open, result, onClose }) {
             mb: 2,
             p: 1.5,
             borderRadius: 2,
-            backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)',
+            backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)',
             flexWrap: 'wrap',
             gap: 1
           }}

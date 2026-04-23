@@ -29,6 +29,7 @@ import Box from '@mui/material/Box';
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
 import useConfig from 'hooks/useConfig';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { useAuth } from 'contexts/AuthContext';
 import { withAlpha } from 'utils/colorUtils';
 
@@ -78,16 +79,15 @@ export default function ProfileSection() {
   const [geoipDialogOpen, setGeoipDialogOpen] = useState(false);
   const anchorRef = useRef(null);
   const greeting = getGreeting();
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
-  const popoverSurface = isDark
-    ? `linear-gradient(180deg, ${withAlpha(palette.background.paper, 0.98)} 0%, ${withAlpha(palette.background.default, 0.98)} 100%)`
-    : 'background.paper';
+  const popoverSurface = palette.background.paper;
+  const popoverSurfaceAccent = isDark
+    ? `linear-gradient(180deg, ${alpha(theme.palette.common.white, 0.025)} 0%, transparent 100%)`
+    : 'none';
   const popoverBorder = withAlpha(palette.divider, isDark ? 0.84 : 0.72);
-  const headerSurface = isDark ? withAlpha(palette.background.default, 0.88) : 'transparent';
-  const nestedProfileSurface = isDark
-    ? `linear-gradient(180deg, ${withAlpha(palette.background.paper, 0.46)} 0%, ${withAlpha(palette.background.default, 0.9)} 100%)`
-    : withAlpha(palette.background.default, 0.72);
+  const headerSurface = isDark ? palette.background.default : 'transparent';
+  const nestedProfileSurface = isDark ? palette.background.default : withAlpha(palette.background.default, 0.72);
   const nestedProfileBorder = isDark ? withAlpha(palette.divider, 0.8) : alpha(theme.palette.primary.main, 0.16);
   const menuHoverBg = isDark ? alpha(theme.palette.primary.main, 0.12) : alpha(theme.palette.primary.main, 0.08);
   const menuSecondaryText = isDark ? withAlpha(palette.text.primary, 0.72) : 'text.secondary';
@@ -311,6 +311,7 @@ export default function ProfileSection() {
                     shadow={isDark ? 'none' : theme.shadows[12]}
                     sx={{
                       bgcolor: popoverSurface,
+                      backgroundImage: popoverSurfaceAccent,
                       border: '1px solid',
                       borderColor: popoverBorder,
                       boxShadow: isDark ? `inset 0 1px 0 ${alpha(theme.palette.common.white, 0.04)}` : undefined

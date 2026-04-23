@@ -30,7 +30,16 @@ import {
   previewSubscriptionNodes
 } from 'api/subscriptions';
 import { getNodeCheckMeta } from 'api/nodeCheck';
-import { getNodeSelector, getNodeSelectorByIds, getNodeGroupStats, getNodeCountries, getNodeGroups, getNodeSources, getNodeIds, getProtocolUIMeta } from 'api/nodes';
+import {
+  getNodeSelector,
+  getNodeSelectorByIds,
+  getNodeGroupStats,
+  getNodeCountries,
+  getNodeGroups,
+  getNodeSources,
+  getNodeIds,
+  getProtocolUIMeta
+} from 'api/nodes';
 import { getTemplates } from 'api/templates';
 import { getScripts } from 'api/scripts';
 import { getTags } from 'api/tags';
@@ -268,27 +277,24 @@ export default function SubscriptionList() {
     [hydrateSelectedNodeMap, selectedNodeMap]
   );
 
-  const syncSelectedNodeMapFromList = useCallback(
-    (nodes) => {
-      if (!Array.isArray(nodes) || nodes.length === 0) return;
-      setSelectedNodeMap((prev) => {
-        const next = { ...prev };
-        nodes.forEach((node) => {
-          next[node.ID] = {
-            ID: node.ID,
-            Name: node.Name,
-            Group: node.Group,
-            Source: node.Source,
-            LinkCountry: node.LinkCountry,
-            UnlockSummary: node.UnlockSummary,
-            UnlockCheckAt: node.UnlockCheckAt
-          };
-        });
-        return next;
+  const syncSelectedNodeMapFromList = useCallback((nodes) => {
+    if (!Array.isArray(nodes) || nodes.length === 0) return;
+    setSelectedNodeMap((prev) => {
+      const next = { ...prev };
+      nodes.forEach((node) => {
+        next[node.ID] = {
+          ID: node.ID,
+          Name: node.Name,
+          Group: node.Group,
+          Source: node.Source,
+          LinkCountry: node.LinkCountry,
+          UnlockSummary: node.UnlockSummary,
+          UnlockCheckAt: node.UnlockCheckAt
+        };
       });
-    },
-    []
-  );
+      return next;
+    });
+  }, []);
 
   // 获取订阅列表（分页）
   const fetchSubscriptions = async (currentPage, currentPageSize) => {

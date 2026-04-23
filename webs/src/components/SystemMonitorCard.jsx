@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 // material-ui
-import { useTheme, useColorScheme, alpha, keyframes } from '@mui/material/styles';
+import { useTheme, alpha, keyframes } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -28,6 +28,7 @@ import KeyIcon from '@mui/icons-material/Key';
 
 // project imports
 import { getSystemStats } from 'api/monitor';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { withAlpha } from 'utils/colorUtils';
 
 // ==============================|| 动画定义 ||============================== //
@@ -68,9 +69,7 @@ const formatUptime = (seconds) => {
 
 const useMonitorThemeTokens = () => {
   const theme = useTheme();
-  const { mode } = useColorScheme();
-  const runtimeColorScheme = typeof document !== 'undefined' ? document.documentElement?.getAttribute('data-color-scheme') : null;
-  const isDark = (mode || runtimeColorScheme || theme.palette.mode) === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const darkText = palette.text?.dark || theme.palette.common.white;
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 // material-ui
-import { useTheme, useColorScheme, alpha } from '@mui/material/styles';
+import { useTheme, alpha } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -34,6 +34,7 @@ import EventIcon from '@mui/icons-material/Event';
 
 // utils
 import { formatDateTime, formatBytes, formatExpireTime, getUsageColor } from '../utils';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { withAlpha } from 'utils/colorUtils';
 
 // local components
@@ -55,10 +56,8 @@ export default function AirportMobileList({
   onRefreshUsage
 }) {
   const theme = useTheme();
-  const { mode } = useColorScheme();
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
-  const runtimeColorScheme = typeof document !== 'undefined' ? document.documentElement?.getAttribute('data-color-scheme') : null;
-  const isDark = (mode || runtimeColorScheme || theme.palette.mode) === 'dark';
 
   // 复制提示状态
   const [copyTip, setCopyTip] = useState({ open: false, name: '' });
@@ -167,20 +166,18 @@ export default function AirportMobileList({
               sx={{
                 borderRadius: 3,
                 border: `1px solid ${isSelected ? alpha(theme.palette.primary.main, 0.45) : alpha(theme.palette.divider, 0.15)}`,
-                boxShadow:
-                  theme.palette.mode === 'dark'
-                    ? `0 4px 12px ${alpha(theme.palette.common.black, 0.24)}`
-                    : `0 4px 12px ${alpha(theme.palette.primary.main, isSelected ? 0.14 : 0.08)}`,
+                boxShadow: isDark
+                  ? `0 4px 12px ${alpha(theme.palette.common.black, 0.24)}`
+                  : `0 4px 12px ${alpha(theme.palette.primary.main, isSelected ? 0.14 : 0.08)}`,
                 backgroundColor: isSelected ? alpha(theme.palette.primary.main, 0.03) : 'background.paper',
                 transition: 'all 0.2s ease',
                 overflow: 'hidden',
                 position: 'relative',
                 '&:hover': {
                   transform: 'translateY(-1px)',
-                  boxShadow:
-                    theme.palette.mode === 'dark'
-                      ? `0 8px 24px ${alpha(theme.palette.common.black, 0.3)}`
-                      : `0 8px 24px ${alpha(theme.palette.primary.main, 0.15)}`
+                  boxShadow: isDark
+                    ? `0 8px 24px ${alpha(theme.palette.common.black, 0.3)}`
+                    : `0 8px 24px ${alpha(theme.palette.primary.main, 0.15)}`
                 },
                 // 顶部状态指示条
                 '&::before': {

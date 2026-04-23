@@ -20,6 +20,7 @@ import Grid from '@mui/material/Grid';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Fade from '@mui/material/Fade';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { withAlpha } from '../../../utils/colorUtils';
 
 // icons
@@ -63,7 +64,7 @@ export default function NodeTransferBox({
   onToggleAllSelected
 }) {
   const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const dialogSurface = isDark ? withAlpha(palette.background.default, 0.96) : palette.background.paper;
   const dialogSurfaceGradient = isDark
@@ -544,12 +545,12 @@ export default function NodeTransferBox({
             <Stack direction="row" alignItems="center" spacing={1}>
               <FormControlLabel
                 control={
-                    <Checkbox
-                      checked={checkedAvailable.length === availableNodesTotal && availableNodesTotal > 0}
-                      indeterminate={checkedAvailable.length > 0 && checkedAvailable.length < availableNodesTotal}
-                      onChange={onToggleAllAvailable}
-                      size="small"
-                    />
+                  <Checkbox
+                    checked={checkedAvailable.length === availableNodesTotal && availableNodesTotal > 0}
+                    indeterminate={checkedAvailable.length > 0 && checkedAvailable.length < availableNodesTotal}
+                    onChange={onToggleAllAvailable}
+                    size="small"
+                  />
                 }
                 label=""
                 sx={{ mr: 0 }}
@@ -558,7 +559,7 @@ export default function NodeTransferBox({
                 可选节点
               </Typography>
             </Stack>
-              <Chip label={availableNodesTotal > 100 ? `前100/${availableNodesTotal}` : availableNodesTotal} size="small" color="primary" />
+            <Chip label={availableNodesTotal > 100 ? `前100/${availableNodesTotal}` : availableNodesTotal} size="small" color="primary" />
           </Stack>
           <Box sx={{ flexGrow: 1, overflow: 'auto', pr: 1 }}>
             <List dense sx={{ ...listSurfaceSx, p: 1 }}>

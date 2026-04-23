@@ -17,8 +17,10 @@ import SettingsBrightnessOutlinedIcon from '@mui/icons-material/SettingsBrightne
 
 import { DEFAULT_THEME_MODE } from 'config';
 import ThemeModeSelector from 'components/ThemeModeSelector';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
+import { withAlpha } from 'utils/colorUtils';
 
 const modeMeta = {
   system: {
@@ -42,6 +44,8 @@ export default function ThemeModeSection() {
   const theme = useTheme();
   const downMD = useMediaQuery(theme.breakpoints.down('md'));
   const { mode } = useColorScheme();
+  const { isDark } = useResolvedColorScheme();
+  const palette = theme.vars?.palette || theme.palette;
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -50,12 +54,14 @@ export default function ThemeModeSection() {
   const currentMeta = modeMeta[selectedMode] || modeMeta.system;
   const Icon = currentMeta.icon;
   const paletteColor = theme.palette[currentMeta.colorKey];
-  const iconColor =
-    theme.palette.mode === 'dark'
-      ? paletteColor.main
-      : currentMeta.colorKey === 'warning'
-        ? theme.palette.warning.dark
-        : paletteColor.dark || paletteColor.main;
+  const iconColor = isDark
+    ? paletteColor.main
+    : currentMeta.colorKey === 'warning'
+      ? theme.palette.warning.dark
+      : paletteColor.dark || paletteColor.main;
+  const popoverSurface = palette.background.paper;
+  const popoverSurfaceAccent = isDark ? `linear-gradient(180deg, ${alpha(theme.palette.common.white, 0.02)} 0%, transparent 100%)` : 'none';
+  const popoverBorder = withAlpha(palette.divider, isDark ? 0.84 : 0.72);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -92,9 +98,9 @@ export default function ThemeModeSection() {
               ...theme.typography.mediumAvatar,
               transition: 'all .2s ease-in-out',
               color: iconColor,
-              background: alpha(paletteColor.main, theme.palette.mode === 'dark' ? 0.22 : 0.14),
+              background: alpha(paletteColor.main, isDark ? 0.22 : 0.14),
               border: '1px solid',
-              borderColor: alpha(iconColor, theme.palette.mode === 'dark' ? 0.3 : 0.2),
+              borderColor: alpha(iconColor, isDark ? 0.3 : 0.2),
               '&:hover, &[aria-controls="theme-mode-menu"]': {
                 color: theme.palette.common.white,
                 background: iconColor,
@@ -127,13 +133,15 @@ export default function ThemeModeSection() {
                     elevation={0}
                     content={false}
                     boxShadow
-                    shadow={theme.palette.mode === 'dark' ? 'none' : theme.shadows[12]}
+                    shadow={isDark ? 'none' : theme.shadows[12]}
                     sx={{
                       minWidth: 320,
                       maxWidth: 360,
-                      bgcolor: theme.palette.mode === 'dark' ? alpha(theme.palette.background.default, 0.96) : 'background.paper',
+                      bgcolor: popoverSurface,
+                      backgroundImage: popoverSurfaceAccent,
                       border: '1px solid',
-                      borderColor: alpha(theme.palette.divider, theme.palette.mode === 'dark' ? 0.9 : 0.72)
+                      borderColor: popoverBorder,
+                      boxShadow: isDark ? `inset 0 1px 0 ${alpha(theme.palette.common.white, 0.04)}` : undefined
                     }}
                   >
                     <Stack sx={{ p: 2.5, gap: 2 }}>

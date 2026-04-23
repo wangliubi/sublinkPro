@@ -50,6 +50,7 @@ import NodeProtocolFilter from 'components/NodeProtocolFilter';
 import NodeTransferBox from './NodeTransferBox';
 import DeduplicationConfig from './DeduplicationConfig';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { getFraudScoreIcon, QUALITY_STATUS_OPTIONS } from 'utils/fraudScore';
 import { getDelayIcon, getSpeedIcon } from 'utils/nodeMetricIcons';
 import {
@@ -178,6 +179,7 @@ export default function SubscriptionFormDialog({
   onToggleAllSelected
 }) {
   const theme = useTheme();
+  const { isDark } = useResolvedColorScheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const [countryWhitelistInput, setCountryWhitelistInput] = useState('');
   const [countryBlacklistInput, setCountryBlacklistInput] = useState('');
@@ -317,7 +319,7 @@ export default function SubscriptionFormDialog({
     bgcolor: 'background.paper',
     border: '1px solid',
     borderColor: 'divider',
-    boxShadow: theme.palette.mode === 'dark' ? 'none' : theme.shadows[1],
+    boxShadow: isDark ? 'none' : theme.shadows[1],
     borderRadius: '12px !important',
     overflow: 'hidden',
     '&.Mui-expanded': {
@@ -524,7 +526,7 @@ export default function SubscriptionFormDialog({
                         <FormControl fullWidth size="small">
                           <InputLabel>分组过滤</InputLabel>
                           <Select value={nodeGroupFilter} label="分组过滤" onChange={(e) => setNodeGroupFilter(e.target.value)}>
-                        <MenuItem value="all">全部分组 ({allNodeTotal})</MenuItem>
+                            <MenuItem value="all">全部分组 ({allNodeTotal})</MenuItem>
                             {groupOptions.map((g) => (
                               <MenuItem key={g} value={g}>
                                 {g} ({groupNodeCounts[g] || 0})

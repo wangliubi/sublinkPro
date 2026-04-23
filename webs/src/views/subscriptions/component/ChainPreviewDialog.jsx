@@ -21,6 +21,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme, alpha, keyframes } from '@mui/material/styles';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 
 import CloseIcon from '@mui/icons-material/Close';
 import PersonIcon from '@mui/icons-material/Person';
@@ -85,7 +86,7 @@ function ChainNodeCard({ node, index, isLast, isMobile, theme }) {
   const [expanded, setExpanded] = useState(false);
   const hasNodes = node.nodes && node.nodes.length > 0;
   const typeColor = getTypeColor(node.type, theme);
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const nestedSurface = isDark ? withAlpha(palette.background.paper, 0.42) : palette.background.paper;
   const mutedSurface = isDark ? withAlpha(palette.background.default, 0.84) : palette.background.default;
@@ -227,7 +228,7 @@ ChainNodeCard.propTypes = {
 // 单条规则的链路图
 function RuleChainFlow({ rule, isMobile, theme }) {
   const [expanded, setExpanded] = useState(!rule.fullyCovered);
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const nestedSurface = isDark ? withAlpha(palette.background.paper, 0.4) : palette.background.paper;
   const mutedSurface = isDark ? withAlpha(palette.background.default, 0.84) : palette.background.default;
@@ -453,7 +454,7 @@ RuleChainFlow.propTypes = {
 // 节点匹配摘要表格
 function NodeMatchTable({ matchSummary, isMobile }) {
   const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const mutedSurface = isDark ? withAlpha(palette.background.default, 0.84) : palette.background.default;
   const panelBorder = isDark ? withAlpha(palette.divider, 0.82) : withAlpha(palette.divider, 0.9);
@@ -529,7 +530,7 @@ NodeMatchTable.propTypes = {
 export default function ChainPreviewDialog({ open, onClose, loading, data }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const isDark = theme.palette.mode === 'dark';
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const dialogSurface = isDark ? withAlpha(palette.background.default, 0.96) : palette.background.paper;
   const dialogSurfaceGradient = isDark

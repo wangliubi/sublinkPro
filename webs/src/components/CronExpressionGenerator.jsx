@@ -15,8 +15,9 @@ import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { alpha, useColorScheme, useTheme } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import useResolvedColorScheme from 'hooks/useResolvedColorScheme';
 import { withAlpha } from 'utils/colorUtils';
 
 // icons
@@ -308,11 +309,9 @@ const WEEKDAY_OPTIONS = [
  */
 export default function CronExpressionGenerator({ value, onChange, label = 'Cron表达式', helperText, error = false }) {
   const theme = useTheme();
-  const { mode } = useColorScheme();
+  const { isDark } = useResolvedColorScheme();
   const palette = theme.vars?.palette || theme.palette;
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const runtimeColorScheme = typeof document !== 'undefined' ? document.documentElement?.getAttribute('data-color-scheme') : null;
-  const isDark = (mode || runtimeColorScheme || theme.palette.mode) === 'dark';
   const customPanelBackground = isDark ? withAlpha(palette.background.default, 0.92) : alpha(theme.palette.background.default, 0.5);
   const customPanelBorder = isDark ? withAlpha(palette.divider, 0.84) : alpha(theme.palette.divider, 0.5);
   const nestedFieldBackground = isDark ? withAlpha(palette.background.paper, 0.94) : 'background.paper';
