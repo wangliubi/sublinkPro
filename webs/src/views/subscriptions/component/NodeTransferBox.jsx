@@ -36,9 +36,10 @@ import SearchIcon from '@mui/icons-material/Search';
 export default function NodeTransferBox({
   // 数据
   availableNodes,
+  selectorNodesTotal,
+  selectorNodesLoading,
   selectedNodes,
   selectedNodesList,
-  allNodes,
   // 选中状态
   checkedAvailable,
   checkedSelected,
@@ -96,6 +97,8 @@ export default function NodeTransferBox({
     borderRadius: 2,
     boxShadow: isDark ? `inset 0 1px 0 ${alpha(theme.palette.common.white, 0.03)}` : 'none'
   };
+
+  const availableNodesTotal = selectorNodesTotal || availableNodes.length;
 
   const searchFieldSx = {
     mb: 2,
@@ -250,7 +253,7 @@ export default function NodeTransferBox({
             }
           }}
         >
-          <Tab label={`可选节点 (${availableNodes.length})`} icon={<ChevronRightIcon />} iconPosition="end" />
+          <Tab label={`可选节点 (${availableNodesTotal})`} icon={<ChevronRightIcon />} iconPosition="end" />
           <Tab label={`已选节点 (${selectedNodes.length})`} icon={<ChevronLeftIcon />} iconPosition="start" />
         </Tabs>
 
@@ -270,8 +273,8 @@ export default function NodeTransferBox({
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={checkedAvailable.length === availableNodes.length && availableNodes.length > 0}
-                      indeterminate={checkedAvailable.length > 0 && checkedAvailable.length < availableNodes.length}
+                      checked={checkedAvailable.length === availableNodesTotal && availableNodesTotal > 0}
+                      indeterminate={checkedAvailable.length > 0 && checkedAvailable.length < availableNodesTotal}
                       onChange={onToggleAllAvailable}
                       size="small"
                     />
@@ -283,7 +286,7 @@ export default function NodeTransferBox({
                   }
                 />
                 <Chip
-                  label={availableNodes.length > 100 ? `显示前100/${availableNodes.length}` : `${availableNodes.length}个`}
+                  label={availableNodesTotal > 100 ? `显示前100/${availableNodesTotal}` : `${availableNodesTotal}个`}
                   size="small"
                   color="primary"
                   variant="outlined"
@@ -541,12 +544,12 @@ export default function NodeTransferBox({
             <Stack direction="row" alignItems="center" spacing={1}>
               <FormControlLabel
                 control={
-                  <Checkbox
-                    checked={checkedAvailable.length === availableNodes.length && availableNodes.length > 0}
-                    indeterminate={checkedAvailable.length > 0 && checkedAvailable.length < availableNodes.length}
-                    onChange={onToggleAllAvailable}
-                    size="small"
-                  />
+                    <Checkbox
+                      checked={checkedAvailable.length === availableNodesTotal && availableNodesTotal > 0}
+                      indeterminate={checkedAvailable.length > 0 && checkedAvailable.length < availableNodesTotal}
+                      onChange={onToggleAllAvailable}
+                      size="small"
+                    />
                 }
                 label=""
                 sx={{ mr: 0 }}
@@ -555,11 +558,7 @@ export default function NodeTransferBox({
                 可选节点
               </Typography>
             </Stack>
-            <Chip
-              label={availableNodes.length > 100 ? `前100/${availableNodes.length}` : availableNodes.length}
-              size="small"
-              color="primary"
-            />
+              <Chip label={availableNodesTotal > 100 ? `前100/${availableNodesTotal}` : availableNodesTotal} size="small" color="primary" />
           </Stack>
           <Box sx={{ flexGrow: 1, overflow: 'auto', pr: 1 }}>
             <List dense sx={{ ...listSurfaceSx, p: 1 }}>
@@ -605,9 +604,14 @@ export default function NodeTransferBox({
                   />
                 </ListItem>
               ))}
-              {availableNodes.length > 100 && (
+              {availableNodesTotal > 100 && (
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'center', py: 1 }}>
-                  还有 {availableNodes.length - 100} 个节点未显示
+                  还有 {availableNodesTotal - 100} 个节点未显示
+                </Typography>
+              )}
+              {selectorNodesLoading && (
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'center', py: 1 }}>
+                  节点列表加载中...
                 </Typography>
               )}
             </List>

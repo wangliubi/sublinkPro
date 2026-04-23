@@ -132,7 +132,12 @@ export default function SubscriptionFormDialog({
   setFormData,
   templates,
   scripts,
-  allNodes,
+  selectorNodes,
+  selectorNodesTotal,
+  selectorNodesLoading,
+  selectedNodesList,
+  groupNodeCounts,
+  allNodeTotal,
   groupOptions,
   sourceOptions,
   countryOptions,
@@ -195,16 +200,6 @@ export default function SubscriptionFormDialog({
     }));
   };
 
-  // 按分组统计节点数量
-  const groupNodeCounts = useMemo(() => {
-    const counts = {};
-    allNodes.forEach((node) => {
-      const group = node.Group || '未分组';
-      counts[group] = (counts[group] || 0) + 1;
-    });
-    return counts;
-  }, [allNodes]);
-
   // 按类别筛选模板
   const clashTemplates = useMemo(() => {
     return templates.filter((t) => !t.category || t.category === 'clash');
@@ -234,9 +229,12 @@ export default function SubscriptionFormDialog({
     setInputValue('');
   };
 
-  // 过滤后的节点列表
-  const filteredNodes = useMemo(() => {
-    return allNodes.filter((node) => {
+  const normalizedSelectorNodes = useMemo(() => selectorNodes || [], [selectorNodes]);
+  const selectorLoadingText = selectorNodesLoading ? '节点列表加载中...' : '';
+
+  // 可选节点（排除已选，使用 ID 匹配）
+  const availableNodes = useMemo(() => {
+    return normalizedSelectorNodes.filter((node) => {
       if (nodeGroupFilter !== 'all' && node.Group !== nodeGroupFilter) return false;
       if (nodeSourceFilter !== 'all' && node.Source !== nodeSourceFilter) return false;
       if (nodeSearchQuery) {
@@ -255,20 +253,13 @@ export default function SubscriptionFormDialog({
           return false;
         }
       }
-      return true;
+      return !formData.selectedNodes.includes(node.ID);
     });
-  }, [allNodes, nodeGroupFilter, nodeSourceFilter, nodeSearchQuery, nodeCountryFilter]);
+  }, [normalizedSelectorNodes, nodeGroupFilter, nodeSourceFilter, nodeSearchQuery, nodeCountryFilter, formData.selectedNodes]);
 
-  // 可选节点（排除已选，使用 ID 匹配）
-  const availableNodes = useMemo(() => {
-    return filteredNodes.filter((node) => !formData.selectedNodes.includes(node.ID));
-  }, [filteredNodes, formData.selectedNodes]);
+  const selectorNodesCount = selectorNodesTotal || availableNodes.length;
 
   // 已选节点（使用 ID 匹配）
-  const selectedNodesList = useMemo(() => {
-    return allNodes.filter((node) => formData.selectedNodes.includes(node.ID));
-  }, [allNodes, formData.selectedNodes]);
-
   // 计算过滤规则数量
   const filterRulesCount = useMemo(() => {
     let count = 0;
@@ -533,7 +524,7 @@ export default function SubscriptionFormDialog({
                         <FormControl fullWidth size="small">
                           <InputLabel>分组过滤</InputLabel>
                           <Select value={nodeGroupFilter} label="分组过滤" onChange={(e) => setNodeGroupFilter(e.target.value)}>
-                            <MenuItem value="all">全部分组 ({allNodes.length})</MenuItem>
+                        <MenuItem value="all">全部分组 ({allNodeTotal})</MenuItem>
                             {groupOptions.map((g) => (
                               <MenuItem key={g} value={g}>
                                 {g} ({groupNodeCounts[g] || 0})
@@ -583,11 +574,12 @@ export default function SubscriptionFormDialog({
                       availableNodes={availableNodes}
                       selectedNodes={formData.selectedNodes}
                       selectedNodesList={selectedNodesList}
-                      allNodes={allNodes}
                       checkedAvailable={checkedAvailable}
                       checkedSelected={checkedSelected}
                       selectedNodeSearch={selectedNodeSearch}
                       onSelectedNodeSearchChange={setSelectedNodeSearch}
+                      selectorNodesTotal={selectorNodesCount}
+                      selectorNodesLoading={selectorNodesLoading}
                       mobileTab={mobileTab}
                       onMobileTabChange={setMobileTab}
                       matchDownMd={matchDownMd}
@@ -602,6 +594,11 @@ export default function SubscriptionFormDialog({
                       onToggleAllAvailable={onToggleAllAvailable}
                       onToggleAllSelected={onToggleAllSelected}
                     />
+                    {selectorLoadingText && (
+                      <Alert severity="info" variant="outlined" sx={{ mt: 1 }}>
+                        {selectorLoadingText}
+                      </Alert>
+                    )}
                   </>
                 )}
               </Stack>
